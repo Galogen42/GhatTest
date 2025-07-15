@@ -67,3 +67,15 @@ h1 {
   border: 1px solid #ccc;
   background-color: white;
 }
+
+.model-select-wrapper {
+  margin-bottom: 10px;
+}
+
+.model-select-wrapper select {
+  margin-left: 5px;
+}
+
+.cost-display {
+  margin-left: 10px;
+}
