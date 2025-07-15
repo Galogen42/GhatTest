@@ -5,10 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "concurrently \"npm:serve-react\" \"npm:serve-server\"",
-    "serve-react": "cd src/renderer && npm run dev",
+    "serve-react": "vite --config src/renderer/vite.config.js",
     "serve-server": "node server.js",
     "build": "npm run build-react",
-    "build-react": "cd src/renderer && npm run build"
+    "build-react": "vite build --config src/renderer/vite.config.js"
   },
   "dependencies": {
     "bpmn-js": "^11.5.0",
