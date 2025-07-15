@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 const examples = require('./src/prompts/bpmn');
 
 const app = express();
@@ -16,8 +16,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 app.post('/api/generate', async (req, res) => {
   const { description } = req.body;
@@ -28,13 +29,13 @@ app.post('/api/generate', async (req, res) => {
   const fullPrompt = `${prompt}\n\nText: ${description}\nXML:`;
 
   try {
-    const result = await openai.createCompletion({
+    const result = await openai.completions.create({
       model: 'code-davinci-002',
       prompt: fullPrompt,
       max_tokens: 500,
       temperature: 0,
     });
-    res.send(result.data.choices[0].text.trim());
+    res.send(result.choices[0].text.trim());
   } catch (err) {
     console.error('OpenAI API error:', err);
     res.status(500).send(`<error>${err.message}</error>`);
