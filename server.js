@@ -47,7 +47,8 @@ async function startServer() {
     res.json({
       systemPrompt,
       maxPromptTokens: MAX_PROMPT_TOKENS,
-      promptLimitMessage: PROMPT_LIMIT_MESSAGE
+      promptLimitMessage: PROMPT_LIMIT_MESSAGE,
+      availableModels: AVAILABLE_MODELS
     });
   });
 
@@ -61,8 +62,16 @@ async function startServer() {
     apiKey: process.env.OPENAI_API_KEY,
   });
 
+  const MODEL_PRICING = {
+    'gpt-3.5-turbo': { prompt: 0.0015, completion: 0.002 },
+    'gpt-3.5-turbo-instruct': { prompt: 0.0015, completion: 0.002 },
+    'gpt-4': { prompt: 0.03, completion: 0.06 }
+  };
+
+  const AVAILABLE_MODELS = Object.keys(MODEL_PRICING);
+
   app.post('/api/generate', async (req, res) => {
-    const { description, globalPrompt } = req.body;
+    const { description, globalPrompt, model = 'gpt-3.5-turbo-instruct' } = req.body;
     console.log('Generating BPMN for:', description);
 
     const examplesPrompt = examples
@@ -76,20 +85,32 @@ async function startServer() {
 
     try {
       const result = await openai.completions.create({
-        model: 'gpt-3.5-turbo-instruct',
+        model,
         prompt: fullPrompt,
         max_tokens: 500,
         temperature: 0,
       });
 
+      const usage = result.usage || { prompt_tokens: 0, completion_tokens: 0 };
+      const pricing = MODEL_PRICING[model] || MODEL_PRICING['gpt-3.5-turbo-instruct'];
+      const cost = ((usage.prompt_tokens / 1000) * pricing.prompt) +
+                   ((usage.completion_tokens / 1000) * pricing.completion);
+
       if (!result.choices || result.choices.length === 0) {
-        return res.status(502).send('<error>No completion returned</error>');
+        return res.status(502).json({ error: 'No completion returned' });
       }
 
-      res.send(result.choices[0].text.trim());
+      res.json({ xml: result.choices[0].text.trim(), cost });
     } catch (err) {
       console.error('OpenAI API error:', err);
-      res.status(500).send(`<error>${err.message}</error>`);
+      const status = err.status || err.code || 500;
+      let message = 'OpenAI request failed';
+      if (status === 429 || status === 503) {
+        message = 'Service temporarily unavailable. Please try again later.';
+      } else if (err.message) {
+        message = err.message;
+      }
+      res.status(typeof status === 'number' ? status : 500).json({ error: message });
     }
   });
 

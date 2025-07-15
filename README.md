@@ -44,6 +44,13 @@ node server.js
 
 This creates a `dist` folder and serves it on `http://localhost:3001`.
 
+## Model Selection and Saving
+
+When the app loads it fetches the list of available OpenAI models from the server.
+You can choose the desired model in the drop-down above the prompt field. After a
+diagram is generated the interface displays the approximate price of the request
+and provides buttons to save the result as XML or PNG.
+
 ## Updating Dependencies
 
 All dependency versions are listed in `package.json`. If newer versions are
