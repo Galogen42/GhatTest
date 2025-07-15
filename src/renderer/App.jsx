@@ -4,23 +4,31 @@ import './App.css';
 
 function App() {
   const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState('');
   const containerRef = useRef(null);
   const modelerRef = useRef(null);
 
   const handleGenerate = async () => {
-    const response = await fetch('http://localhost:3001/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description })
-    });
-    const xml = await response.text();
-    if (!modelerRef.current) {
-      modelerRef.current = new BpmnJS({ container: containerRef.current });
-    }
+    setLoading(true);
+    setStatus('Generating...');
     try {
+      const response = await fetch('http://localhost:3001/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description })
+      });
+      const xml = await response.text();
+      if (!modelerRef.current) {
+        modelerRef.current = new BpmnJS({ container: containerRef.current });
+      }
       await modelerRef.current.importXML(xml);
+      setStatus('');
     } catch (err) {
       console.error(err);
+      setStatus('Failed to generate diagram');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,9 +41,14 @@ function App() {
         value={description}
         onChange={e => setDescription(e.target.value)}
       />
-      <button className="generate-button" onClick={handleGenerate}>
+      <button
+        className="generate-button"
+        onClick={handleGenerate}
+        disabled={loading}
+      >
         Generate
       </button>
+      {status && <p className="status-message">{status}</p>}
       <div ref={containerRef} className="viewer-container"></div>
     </div>
   );
