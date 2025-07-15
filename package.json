@@ -1,0 +1,41 @@
+{
+  "name": "bpmn-constructor",
+  "version": "0.1.0",
+  "description": "MVP BPMN constructor",
+  "main": "electron.js",
+  "scripts": {
+    "postinstall": "electron-builder install-app-deps",
+    "start": "concurrently \"npm:serve-react\" \"npm:serve-electron\"",
+    "serve-react": "cd src/renderer && npm run dev",
+    "serve-electron": "wait-on tcp:3000 && electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "bpmn-js": "^11.5.0",
+    "concurrently": "^8.2.0",
+    "electron": "^28.1.0",
+    "openai": "^4.24.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.14.1",
+    "vite": "^5.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "wait-on": "^7.0.1"
+  },
+  "build": {
+    "appId": "com.example.bpmnconstructor",
+    "productName": "BPMNConstructor",
+    "directories": {
+      "buildResources": "public"
+    },
+    "files": [
+      "dist/**",
+      "electron.js",
+      "src/main/**",
+      "src/prompts/**",
+      "src/preload.js"
+    ]
+  }
+}

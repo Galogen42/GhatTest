@@ -1,0 +1,8 @@
+{
+  "name": "renderer",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}
