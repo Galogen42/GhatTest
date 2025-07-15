@@ -19,6 +19,12 @@ function App() {
         body: JSON.stringify({ description })
       });
       const xml = await response.text();
+
+      if (!response.ok) {
+        setStatus(`Failed to generate diagram: ${xml}`);
+        return;
+      }
+
       if (!modelerRef.current) {
         modelerRef.current = new BpmnJS({ container: containerRef.current });
       }
