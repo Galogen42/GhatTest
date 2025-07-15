@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     async function loadConfig() {
       try {
-        const res = await fetch('http://localhost:3001/api/config');
+        const res = await fetch('/api/config');
         const cfg = await res.json();
         setSystemPrompt(cfg.systemPrompt || '');
         setMaxPromptTokens(cfg.maxPromptTokens || 0);
@@ -36,10 +36,10 @@ function App() {
   useEffect(() => {
     async function checkLimit() {
       try {
-        const res = await fetch('http://localhost:3001/api/token-count', {
+        const res = await fetch('/api/token-count', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: `${systemPrompt}${globalPrompt}${description}` })
+          body: JSON.stringify({ description, globalPrompt })
         });
         const data = await res.json();
         const count = data.count || 0;
@@ -61,7 +61,7 @@ function App() {
     setLoading(true);
     setStatus('Generating...');
     try {
-      const response = await fetch('http://localhost:3001/api/generate', {
+      const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description, globalPrompt })
