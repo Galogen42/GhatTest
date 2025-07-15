@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { encode } from 'gpt-3-encoder';
 import BpmnJS from 'bpmn-js/lib/Modeler';
 import './App.css';
 
@@ -35,14 +34,27 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const count = encode(`${systemPrompt}${globalPrompt}${description}`).length;
-    if (maxPromptTokens && count > maxPromptTokens) {
-      setIsOverLimit(true);
-      setErrorMessage(limitMessage);
-    } else {
-      setIsOverLimit(false);
-      setErrorMessage('');
+    async function checkLimit() {
+      try {
+        const res = await fetch('http://localhost:3001/api/token-count', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: `${systemPrompt}${globalPrompt}${description}` })
+        });
+        const data = await res.json();
+        const count = data.count || 0;
+        if (maxPromptTokens && count > maxPromptTokens) {
+          setIsOverLimit(true);
+          setErrorMessage(limitMessage);
+        } else {
+          setIsOverLimit(false);
+          setErrorMessage('');
+        }
+      } catch (err) {
+        console.error('Failed to fetch token count', err);
+      }
     }
+    checkLimit();
   }, [globalPrompt, description, systemPrompt, maxPromptTokens, limitMessage]);
 
   const handleGenerate = async () => {
