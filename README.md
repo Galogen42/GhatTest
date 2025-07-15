@@ -46,3 +46,13 @@ This creates a `dist` folder and serves it on `http://localhost:3001`.
 
 All dependency versions are listed in `package.json`. If newer versions are
 released you can update them with `npm update` (internet access required).
+
+## Prompt Size Limit
+
+The server reads `config/config.json` for the `MAX_PROMPT_TOKENS` parameter.
+Before sending a request to OpenAI the combined prompt
+(`systemPrompt + globalPrompt + description`) is measured with
+`gpt-3-encoder`. If the size exceeds this limit the request is blocked and the
+user interface shows the message from `PROMPT_LIMIT_MESSAGE` in the config
+(default: "Exceeded prompt size limit"). The global prompt editor highlights in
+red and the Generate button is disabled while over the limit.
