@@ -25,8 +25,8 @@ function App() {
       await modelerRef.current.importXML(xml);
       setStatus('');
     } catch (err) {
-      console.error(err);
-      setStatus('Failed to generate diagram');
+      console.error('Generation failed:', err);
+      setStatus(`Failed to generate diagram: ${err.message}`);
     } finally {
       setLoading(false);
     }
