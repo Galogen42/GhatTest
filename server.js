@@ -3,6 +3,13 @@ const cors = require('cors');
 const OpenAI = require('openai');
 const examples = require('./src/prompts/bpmn');
 
+if (!process.env.OPENAI_API_KEY) {
+  console.error(
+    'Error: OPENAI_API_KEY environment variable is not set. Please provide your OpenAI API key.'
+  );
+  process.exit(1);
+}
+
 const app = express();
 const port = process.env.PORT || 3001;
 
