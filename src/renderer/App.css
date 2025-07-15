@@ -25,6 +25,20 @@ h1 {
   box-sizing: border-box;
 }
 
+.prompt-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.prompt-input.over-limit {
+  border: 1px solid red;
+}
+
 .generate-button {
   margin-bottom: 10px;
   background-color: #007bff;

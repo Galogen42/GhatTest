@@ -1,0 +1,4 @@
+{
+  "MAX_PROMPT_TOKENS": 1000,
+  "PROMPT_LIMIT_MESSAGE": "Exceeded prompt size limit"
+}
