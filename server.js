@@ -31,6 +31,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
 
+app.post('/api/token-count', (req, res) => {
+  const { text } = req.body;
+  const count = encode(text).length;
+  res.json({ count });
+});
+
 app.get('/api/config', (req, res) => {
   res.json({
     systemPrompt,
