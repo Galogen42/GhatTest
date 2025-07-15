@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import BpmnJS from 'bpmn-js/lib/Modeler';
+import './App.css';
 
 function App() {
   const [description, setDescription] = useState('');
@@ -24,18 +25,18 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="app-container">
+      <h1>BPMN Constructor</h1>
       <textarea
         rows={4}
-        style={{ width: '100%' }}
+        className="description-input"
         value={description}
         onChange={e => setDescription(e.target.value)}
       />
-      <button onClick={handleGenerate}>Generate</button>
-      <div
-        ref={containerRef}
-        style={{ height: 500, border: '1px solid #ccc', marginTop: 10 }}
-      ></div>
+      <button className="generate-button" onClick={handleGenerate}>
+        Generate
+      </button>
+      <div ref={containerRef} className="viewer-container"></div>
     </div>
   );
 }
