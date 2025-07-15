@@ -21,9 +21,9 @@ It uses **React** for the client UI and a small **Express** server to talk to th
    ```bash
    export OPENAI_API_KEY=your_key_here
    ```
-   On Windows PowerShell use:
-   ```powershell
-   $env:OPENAI_API_KEY="your_key_here"
+   On Windows command prompt use:
+   ```cmd
+   set OPENAI_API_KEY=your_key_here
    ```
 5. Start the application in development mode:
    ```bash
