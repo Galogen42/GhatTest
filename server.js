@@ -37,7 +37,8 @@ app.post('/api/generate', async (req, res) => {
 
   try {
     const result = await openai.completions.create({
-      model: 'code-davinci-002',
+      // code-davinci-002 has been deprecated in favor of gpt-3.5-turbo-instruct
+      model: 'gpt-3.5-turbo-instruct',
       prompt: fullPrompt,
       max_tokens: 500,
       temperature: 0,
