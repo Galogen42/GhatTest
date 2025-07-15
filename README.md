@@ -30,6 +30,8 @@ It uses **React** for the client UI and a small **Express** server to talk to th
    npm start
    ```
    The React frontend is served on <http://localhost:3000> while the backend runs on port `3001`.
+   All API requests from the frontend use relative URLs (`/api/...`) so the
+   application can be deployed on any host without code changes.
 
 ## Building for Production
 
