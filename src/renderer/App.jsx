@@ -7,7 +7,12 @@ function App() {
   const modelerRef = useRef(null);
 
   const handleGenerate = async () => {
-    const xml = await window.api.generate(description);
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description })
+    });
+    const xml = await response.text();
     if (!modelerRef.current) {
       modelerRef.current = new BpmnJS({ container: containerRef.current });
     }
